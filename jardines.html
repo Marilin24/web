@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Jardines</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+
+        .table th,
+        .table td {
+            text-align: center;
+        }
+
+        .form-control {
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            margin-top: 10px;
+        }
+
+        nav {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Jardines</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="clientes.html">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Flores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="varieda.html">Variedades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="especie.html">Especies</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <h1 class="mb-4">Lista de Jardines</h1>
+
+        <form id="jardinForm" class="mb-4">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" id="nombre" class="form-control" placeholder="Nombre" required>
+            </div>
+            <div class="mb-3">
+                <label for="ubicacion" class="form-label">Ubicación</label>
+                <input type="text" id="ubicacion" class="form-control" placeholder="Ubicación" required>
+            </div>
+            <div class="mb-3">
+                <label for="encargado" class="form-label">Encargado</label>
+                <input type="text" id="encargado" class="form-control" placeholder="Encargado" required>
+            </div>
+            <div class="mb-3">
+                <label for="tipo" class="form-label">Tipo</label>
+                <input type="text" id="tipo" class="form-control" placeholder="Tipo" required>
+            </div>
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <textarea id="descripcion" class="form-control" rows="3" placeholder="Descripción" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar Jardín</button>
+        </form>
+
+        <table id="jardinesTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Ubicación</th>
+                    <th>Encargado</th>
+                    <th>Tipo</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se insertarán las filas de la tabla -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script>
+        const apiUrl = 'http://127.0.0.1:3000/api/jardines';
+
+        // Función para obtener los jardines de la API
+        function fetchJardines() {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(jardines => {
+                    const tableBody = document.getElementById('jardinesTable').getElementsByTagName('tbody')[0];
+                    tableBody.innerHTML = ''; // Limpiar tabla antes de agregar los datos
+
+                    jardines.forEach(jardin => {
+                        const row = tableBody.insertRow();
+                        row.insertCell(0).textContent = jardin.nombre;
+                        row.insertCell(1).textContent = jardin.ubicacion;
+                        row.insertCell(2).textContent = jardin.encargado;
+                        row.insertCell(3).textContent = jardin.tipo;
+                        row.insertCell(4).textContent = jardin.descripcion;
+                    });
+                })
+                .catch(error => console.error('Error obteniendo los jardines:', error));
+        }
+
+        // Función para manejar el envío del formulario
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const nuevoJardin = {
+                nombre: document.getElementById('nombre').value,
+                ubicacion: document.getElementById('ubicacion').value,
+                encargado: document.getElementById('encargado').value,
+                tipo: document.getElementById('tipo').value,
+                descripcion: document.getElementById('descripcion').value
+            };
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(nuevoJardin)
+            })
+                .then(response => response.json())
+                .then(jardin => {
+                    alert('Jardín agregado:', jardin);
+                    fetchJardines(); // Actualizar la lista de jardines
+                    document.getElementById('jardinForm').reset(); // Limpiar el formulario
+                })
+                .catch(error => console.error('Error agregando el jardín:', error));
+        }
+
+        // Configurar el manejador del formulario
+        document.getElementById('jardinForm').addEventListener('submit', handleFormSubmit);
+
+        // Obtener los jardines al cargar la página
+        fetchJardines();
+    </script>
+</body>
+</html>

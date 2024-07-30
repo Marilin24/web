@@ -89,7 +89,7 @@
     <script>
         async function fetchCustomers() {
             try {
-                const response = await fetch('http://127.0.0.1:3000/api/customers');
+                const response = await fetch('34.224.27.231:3000/api/customers');
                 const customers = await response.json();
                 const customerTableBody = document.getElementById('customerTable').querySelector('tbody');
 

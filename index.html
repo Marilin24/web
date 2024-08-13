@@ -105,7 +105,7 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
     <script>
-        const apiUrl = 'http://localhost:3000/api/flores';
+        const apiUrl = 'http://52.201.44.70:3000/api/flores';
 
         // Función para obtener las flores de la API
         function fetchFlores() {
@@ -138,7 +138,7 @@
             const familia = document.getElementById('familia').value;
             const descripcion = document.getElementById('descripcion').value;
             try {
-                const response = await fetch('http://127.0.0.1:3000/api/flores', {
+                const response = await fetch('http://52.201.44.70:3000/api/flores', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
